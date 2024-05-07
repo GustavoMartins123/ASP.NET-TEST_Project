@@ -22,6 +22,7 @@ namespace NewTestDB.Extensions
 
             builder.Services.AddScoped<IRepository<PersonModel>, PersonRepository>();
             builder.Services.AddScoped<IRepository<CarModel>, CarRepository>();
+builder.Services.AddScoped<IRepository<JobPersonModel>, JobPersonRepository>();
 
 
             return builder;

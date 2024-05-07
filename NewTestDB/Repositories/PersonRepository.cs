@@ -16,12 +16,13 @@ namespace NewTestDB.Repositories
 
         public async Task<List<PersonModel>> GetAll()
         {
-            return await _context.PersonModels.Include(p => p.Cars.OrderBy(p => p.Id)).ToListAsync();
+            var persons = await _context.PersonModels.Include(p => p.Cars.OrderBy(p => p.Id)).Include(p => p.Job).ToListAsync();
+            return persons;
         }
 
         public async Task<PersonModel> GetById(int id)
         {
-            PersonModel personModel = await _context.PersonModels.Include(p => p.Cars).FirstOrDefaultAsync(p => p.Id == id);
+            PersonModel personModel = await _context.PersonModels.Include(p => p.Cars).Include(p => p.Job).FirstOrDefaultAsync(p => p.Id == id);
             if(personModel == null)
             {
                 throw new Exception($"Entity with this Id: {id} cannot be found");
@@ -44,13 +45,7 @@ namespace NewTestDB.Repositories
             {
                 throw new Exception($"Entity with this Id: {id} cannot be found");
             }
-            personModel.Id = entity.Id;
-            personModel.Name = entity.Name;
-            personModel.LastName = entity.LastName;
-            personModel.Age = entity.Age;
-            personModel.CarId = entity.CarId;
-
-            _context.PersonModels.Update(personModel);
+            _context.Entry(personModel).CurrentValues.SetValues(entity);
             await _context.SaveChangesAsync();
             return personModel;
         }

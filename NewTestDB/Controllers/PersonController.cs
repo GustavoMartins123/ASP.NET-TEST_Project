@@ -24,11 +24,7 @@ namespace NewTestDB.Controllers
         public async Task<ActionResult<PersonModel>> GetPersonById(int id)
         {
             PersonModel personModel = await _repository.GetById(id);
-            if (personModel == null)
-            {
-                return NotFound();
-            }
-            return personModel;
+            return Ok(personModel);
         }
 
         [HttpPost("AddPerson")]

@@ -43,13 +43,7 @@ namespace NewTestDB.Repositories
             {
                 throw new Exception($"Entity with this Id: {id} cannot be found");
             }
-            carModel.Id = entity.Id;
-            carModel.Name = entity.Name;
-            carModel.Description = entity.Description;
-            carModel.LicensePlate = entity.LicensePlate;
-            carModel.PersonId = entity.PersonId;
-
-            _context.CarModels.Update(carModel);
+            _context.Entry(carModel).CurrentValues.SetValues(entity);
             await _context.SaveChangesAsync();
             return carModel;
         }

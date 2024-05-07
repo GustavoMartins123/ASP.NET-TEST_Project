@@ -22,6 +22,9 @@ namespace NewTestDB.Mapping
             builder.HasMany(p => p.Cars)
                 .WithOne()
                 .HasForeignKey(c => c.PersonId);
+            builder.HasOne(p => p.Job)
+                .WithOne()
+                .HasForeignKey<JobPersonModel>(j => j.PersonId);
         }
     }
 }

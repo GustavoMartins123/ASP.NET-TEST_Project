@@ -25,7 +25,7 @@ namespace NewTestDB.Controllers
         public async Task<ActionResult<CarModel>> GetCarById(int id)
         {
             CarModel carModel = await _repository.GetById(id);
-            return carModel;
+            return Ok(carModel);
         }
 
         [HttpPost("AddCar")]

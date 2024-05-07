@@ -11,5 +11,7 @@ namespace NewTestDB.Models
         public string Age { get; set; }
         public int? CarId { get; set; }
         public virtual List<CarModel>? Cars { get; set; }
+        public int JobId { get; set; }
+        public virtual JobPersonModel Job { get; set; }
     }
 }

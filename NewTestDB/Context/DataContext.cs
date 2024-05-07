@@ -13,10 +13,12 @@ namespace NewTestDB.Context
 
         public DbSet<PersonModel> PersonModels { get; set; }
         public DbSet<CarModel> CarModels { get; set; }
+        public DbSet<JobPersonModel> JobModels { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new PersonMapping());
             modelBuilder.ApplyConfiguration(new CarMapping());
+            modelBuilder.ApplyConfiguration(new JobPersonMapping());
             base.OnModelCreating(modelBuilder);
         }
     }
