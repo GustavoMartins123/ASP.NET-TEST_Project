@@ -14,6 +14,7 @@ namespace NewTestDB.Mapping
                 .HasColumnName("Id")
                 .IsRequired()
                 .ValueGeneratedOnAdd();
+            builder.Property(c => c.Manufacturer).HasMaxLength(30);
             builder.Property(c => c.Name).HasMaxLength(30);
             builder.Property(c => c.Description).HasMaxLength(200);
             builder.Property(c => c.LicensePlate).HasMaxLength(8);

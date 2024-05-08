@@ -16,7 +16,12 @@ namespace NewTestDB.Repositories
 
         public async Task<List<CarModel>> GetAll()
         {
-            return await _context.CarModels.ToListAsync();
+            return await _context.CarModels.Select(c => new CarModel
+            {
+                Id = c.Id,
+                Manufacturer = c.Manufacturer,
+                Name = c.Name
+            }).OrderBy(c => c.Id).ToListAsync();
         }
 
         public async Task<CarModel> GetById(int id)

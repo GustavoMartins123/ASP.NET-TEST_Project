@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NewTestDB.Models;
+using NewTestDB.Models.Dto.Car;
 using NewTestDB.Repositories.Interface;
 
 namespace NewTestDB.Controllers
@@ -18,14 +19,32 @@ namespace NewTestDB.Controllers
         public async Task<ActionResult<CarModel>> GetAllCars()
         {
             List<CarModel> cars = await _repository.GetAll();
-            return Ok(cars);
+            List<CarReturnDto> carsDto = new();
+
+            foreach (var carDto in cars)
+            {
+                carsDto.Add(new CarReturnDto
+                {
+                    Id = carDto.Id,
+                    Manufacturer = carDto.Manufacturer,
+                    Name = carDto.Name
+                });
+            }
+            return Ok(carsDto);
         }
 
         [HttpGet("GetCarById/{id}")]
         public async Task<ActionResult<CarModel>> GetCarById(int id)
         {
             CarModel carModel = await _repository.GetById(id);
-            return Ok(carModel);
+            var carDetailDto = new CarDetailDto {
+                Id = carModel.Id,
+                Manufacturer = carModel.Manufacturer,
+                Name = carModel.Name,
+                Description = carModel.Description,
+                LicensePlate = carModel.LicensePlate
+            };
+            return Ok(carDetailDto);
         }
 
         [HttpPost("AddCar")]

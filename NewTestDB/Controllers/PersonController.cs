@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NewTestDB.Models;
+using NewTestDB.Models.Dto.Person;
 using NewTestDB.Repositories.Interface;
+using NewTestDB.Models.Dto.JobPerson;
+using NewTestDB.Models.Dto.Car;
 
 namespace NewTestDB.Controllers
 {
@@ -17,14 +20,52 @@ namespace NewTestDB.Controllers
         public async Task<ActionResult<PersonModel>> GetAllPersons()
         {
             List<PersonModel> persons = await _repository.GetAll();
-            return Ok(persons);
+            List<PersonReturnDto> personsDto = new();
+
+            foreach (var personDto in persons)
+            {
+                personsDto.Add(new PersonReturnDto
+                {
+                    Id = personDto.Id,
+                    Name = personDto.Name,
+                    LastName = personDto.LastName,
+                    Age = personDto.Age
+                });
+            }
+            return Ok(personsDto);
         }
 
         [HttpGet("GetPersonById/{id}")]
         public async Task<ActionResult<PersonModel>> GetPersonById(int id)
         {
             PersonModel personModel = await _repository.GetById(id);
-            return Ok(personModel);
+            var personDto = new PersonDetailDto {
+                Id = personModel.Id,
+                Name = personModel.Name,
+                LastName = personModel.LastName,
+                Age = personModel.Age,
+                Cars = personModel.Cars.Select(c => new CarDetailDto
+                {
+                    Id = c.Id,
+                    Manufacturer = c.Manufacturer,
+                    Name = c.Name,
+                    Description = c.Description,
+                    LicensePlate = c.LicensePlate
+                }).ToList(),
+            };
+            if (personModel.Job != null)
+            {
+                personDto.Job = new JobPersonDetailDto
+                {
+                    Id = personModel.Job.Id,
+                    Company = personModel.Job.Company,
+                    Title = personModel.Job.Title,
+                    Description = personModel.Job.Description,
+                    Salary = personModel.Job.Salary,
+                    Status = personModel.Job.Status
+                };
+            }
+            return Ok(personDto);
         }
 
         [HttpPost("AddPerson")]

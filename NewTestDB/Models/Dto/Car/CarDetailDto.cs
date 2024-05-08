@@ -1,15 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace NewTestDB.Models
+﻿namespace NewTestDB.Models.Dto.Car
 {
-    [Table("CarModel")]
-    public class CarModel
+    public class CarDetailDto
     {
         public int Id { get; set; }
         public string Manufacturer { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string LicensePlate { get; set; }
-        public int? PersonId { get; set; }
     }
 }

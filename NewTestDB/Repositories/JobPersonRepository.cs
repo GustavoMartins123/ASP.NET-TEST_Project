@@ -16,7 +16,11 @@ namespace NewTestDB.Repositories
 
         public async Task<List<JobPersonModel>> GetAll()
         {
-            return await _context.JobModels.ToListAsync();
+            return await _context.JobModels.Select(j => new JobPersonModel
+            {
+                Id = j.Id,
+                Status = j.Status
+            }).OrderBy(j => j.Id).ToListAsync();
         }
 
         public async Task<JobPersonModel> GetById(int id)

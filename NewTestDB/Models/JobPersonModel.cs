@@ -10,7 +10,7 @@ namespace NewTestDB.Models
         public string? Company {  get; set; }
         public string? Title { get; set; }
         public string? Description { get; set; }
-        public int? Salary { get; set; }
+        public int Salary { get; set; }
         public Status Status { get; set; }
         public int PersonId { get; set; }
 

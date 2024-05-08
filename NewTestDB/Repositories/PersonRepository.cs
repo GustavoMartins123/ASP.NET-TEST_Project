@@ -16,8 +16,13 @@ namespace NewTestDB.Repositories
 
         public async Task<List<PersonModel>> GetAll()
         {
-            var persons = await _context.PersonModels.Include(p => p.Cars.OrderBy(p => p.Id)).Include(p => p.Job).ToListAsync();
-            return persons;
+            return await _context.PersonModels.Select(p => new PersonModel
+            {
+                Id = p.Id,
+                Name = p.Name,
+                LastName = p.LastName,
+                Age = p.Age
+            }).OrderBy(p => p.Id).ToListAsync();
         }
 
         public async Task<PersonModel> GetById(int id)
