@@ -12,18 +12,16 @@ namespace NewTestDB.Extensions
         {
 
             builder.Services.AddControllers();
+            builder.Services.AddAutoMapper(typeof(BuilderExtensions));
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddEntityFrameworkNpgsql().AddDbContext<DataContext>(
-                    options => options.UseNpgsql(builder.Configuration.GetConnectionString("DataBase"))
-                );
+            builder.Services.AddDbContext<DataContext>(options =>options.UseNpgsql(builder.Configuration.GetConnectionString("DataBase")));
 
             builder.Services.AddScoped<IRepository<PersonModel>, PersonRepository>();
             builder.Services.AddScoped<IRepository<CarModel>, CarRepository>();
-builder.Services.AddScoped<IRepository<JobPersonModel>, JobPersonRepository>();
-
+            builder.Services.AddScoped<IRepository<JobPersonModel>, JobPersonRepository>();
 
             return builder;
         }

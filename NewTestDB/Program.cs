@@ -1,7 +1,4 @@
 using NewTestDB.Extensions;
-using NewTestDB.Models;
-using NewTestDB.Repositories.Interface;
-using NewTestDB.Repositories;
 
 namespace NewTestDB
 {

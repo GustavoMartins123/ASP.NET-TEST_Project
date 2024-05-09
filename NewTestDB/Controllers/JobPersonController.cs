@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using NewTestDB.Models;
 using NewTestDB.Models.Dto;
 using NewTestDB.Models.Dto.JobPerson;
@@ -11,9 +12,12 @@ namespace NewTestDB.Controllers
     public class JobPersonController : ControllerBase
     {
         private readonly IRepository<JobPersonModel> _repository;
-        public JobPersonController(IRepository<JobPersonModel> repository)
+        private readonly IMapper _mapper;
+
+        public JobPersonController(IRepository<JobPersonModel> repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         [HttpGet("GetAllJobs")]
@@ -25,11 +29,7 @@ namespace NewTestDB.Controllers
 
             foreach (var job in jobs)
             {
-                jobsDto.Add(new JobPersonReturnDto
-                {
-                    Id = job.Id,
-                    Status = job.Status
-                });
+                jobsDto.Add(_mapper.Map<JobPersonReturnDto>(job));
             }
             return Ok(jobsDto);
         }
@@ -38,14 +38,7 @@ namespace NewTestDB.Controllers
         public async Task<ActionResult<JobPersonModel>> GetJobById(int id)
         {
             JobPersonModel jobModel = await _repository.GetById(id);
-            var jobDetail = new JobPersonDetailDto{
-                Id = jobModel.Id,
-                Company = jobModel.Company,
-                Title = jobModel.Title,
-                Description = jobModel.Description,
-                Salary = jobModel.Salary,
-                Status = jobModel.Status
-            };
+            JobPersonDetailDto jobDetail = _mapper.Map<JobPersonDetailDto>(jobModel);
             return Ok(jobDetail);
         }
 
@@ -59,7 +52,6 @@ namespace NewTestDB.Controllers
         [HttpPut("UpdateJob/{id}")]
         public async Task<ActionResult<JobPersonModel>> UpdateJob(JobPersonModel entity, int id)
         {
-            entity.Id = id;
             JobPersonModel jobModel = await _repository.Update(entity, id);
             return Ok(jobModel);
         }

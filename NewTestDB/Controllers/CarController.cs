@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using NewTestDB.Models;
 using NewTestDB.Models.Dto.Car;
 using NewTestDB.Repositories.Interface;
@@ -10,9 +11,12 @@ namespace NewTestDB.Controllers
     public class CarController : ControllerBase
     {
         private readonly IRepository<CarModel> _repository;
-        public CarController(IRepository<CarModel> repository)
+        private readonly IMapper _mapper;
+
+        public CarController(IRepository<CarModel> repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         [HttpGet("GetAllCars")]
@@ -23,12 +27,7 @@ namespace NewTestDB.Controllers
 
             foreach (var carDto in cars)
             {
-                carsDto.Add(new CarReturnDto
-                {
-                    Id = carDto.Id,
-                    Manufacturer = carDto.Manufacturer,
-                    Name = carDto.Name
-                });
+                carsDto.Add(_mapper.Map<CarReturnDto>(carDto));
             }
             return Ok(carsDto);
         }
@@ -37,14 +36,10 @@ namespace NewTestDB.Controllers
         public async Task<ActionResult<CarModel>> GetCarById(int id)
         {
             CarModel carModel = await _repository.GetById(id);
-            var carDetailDto = new CarDetailDto {
-                Id = carModel.Id,
-                Manufacturer = carModel.Manufacturer,
-                Name = carModel.Name,
-                Description = carModel.Description,
-                LicensePlate = carModel.LicensePlate
-            };
-            return Ok(carDetailDto);
+
+            CarDetailDto carDto = _mapper.Map<CarDetailDto>(carModel);
+
+            return Ok(carDto);
         }
 
         [HttpPost("AddCar")]
@@ -57,7 +52,6 @@ namespace NewTestDB.Controllers
         [HttpPut("UpdateCar/{id}")]
         public async Task<ActionResult<CarModel>> UpdateCar(CarModel entity, int id)
         {
-            entity.Id = id;
             CarModel carModel = await _repository.Update(entity, id);
             return Ok(carModel);
         }
